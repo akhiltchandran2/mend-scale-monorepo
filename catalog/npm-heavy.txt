@@ -1,0 +1,11 @@
+# Old toolchains with large dependency trees and published CVEs, smallest first.
+# tools/lock.py adds these to an npm profile until it reaches --min-packages,
+# skipping any that would push it past --max-packages.
+gulp@3.9.1
+@angular/cli@8.0.0
+karma@4.0.0
+webpack@4.29.0
+jest@24.0.0
+@vue/cli-service@3.0.0
+react-scripts@3.0.1
+gatsby@2.20.0

@@ -33,8 +33,8 @@ def main():
     for eco, data in index["ecosystems"].items():
         count = 0
         for proj in data["projects"]:
-            if eco == "npm":
-                lock = args.out / "npm" / proj["name"] / "package-lock.json"
+            if eco.startswith("npm"):
+                lock = args.out / eco / proj["name"] / "package-lock.json"
                 if lock.exists():
                     n = len(json.loads(lock.read_text())["packages"]) - 1
                 else:
@@ -43,7 +43,7 @@ def main():
                 n = len(data["profiles"][proj["profile"]]) * FANOUT[eco]
             per_project[proj["name"]] = n
             count += n
-        print(f"{eco:6} {len(data['projects']):6} projects  ~{int(count):>9,} component instances")
+        print(f"{eco:9} {len(data['projects']):6} projects  ~{int(count):>9,} component instances")
         total += count
 
     bpc = args.bytes_per_component

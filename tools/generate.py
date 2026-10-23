@@ -92,12 +92,12 @@ def write_maven(path, name, deps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--npm", type=int, default=5500, help="number of npm projects")
+    ap.add_argument("--npm", type=int, default=400, help="number of npm projects")
     ap.add_argument("--pypi", type=int, default=300, help="number of Python projects")
     ap.add_argument("--maven", type=int, default=200, help="number of Maven projects")
     ap.add_argument("--deps", type=int, default=35, help="direct dependencies per Python/Maven project")
-    ap.add_argument("--npm-deps", type=int, default=20,
-                    help="direct dependencies per npm project (lock.py trims further to fit --max-packages)")
+    ap.add_argument("--npm-deps", type=int, default=45,
+                    help="direct dependencies per npm project (lock.py then fits each profile to --min/--max-packages)")
     ap.add_argument("--profiles", type=int, default=12, help="distinct dependency sets per ecosystem")
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--out", type=Path, default=ROOT / "projects")

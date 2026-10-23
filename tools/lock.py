@@ -5,9 +5,10 @@ Mend needs a lockfile (or node_modules) to resolve npm dependencies. npm runs
 once per profile with --package-lock-only (no install, no scripts); the result
 is copied into each project with that profile and renamed to match it.
 
-Profiles that resolve to more than --max-packages are trimmed one direct
-dependency at a time. Small projects keep each `mend dep` policy-compliance
-check short enough to finish before the CLI's deadline.
+Each profile is fitted to --min-packages..--max-packages resolved packages:
+toolchains from catalog/npm-heavy.txt are added until it reaches the minimum,
+and direct dependencies are trimmed if it goes over the maximum. At ~5 KB of
+`mend dep --format json` output per package, 1,000 packages is ~5 MB per project.
 """
 import argparse
 import copy
@@ -39,13 +40,17 @@ def resolved(lock):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, default=ROOT / "projects")
-    ap.add_argument("--max-packages", type=int, default=200,
+    ap.add_argument("--min-packages", type=int, default=1000,
+                    help="lower bound on resolved packages per project")
+    ap.add_argument("--max-packages", type=int, default=1400,
                     help="upper bound on resolved packages per project")
     args = ap.parse_args()
 
     index_path = args.out / "index.json"
     index = json.loads(index_path.read_text())
     npm = index["ecosystems"]["npm"]
+    heavy = [l.strip() for l in (ROOT / "catalog" / "npm-heavy.txt").read_text().splitlines()
+             if l.strip() and not l.startswith("#")]
     locks = []
     for i, deps in enumerate(npm["profiles"]):
         deps = list(deps)
@@ -55,6 +60,14 @@ def main():
             trials = [(resolved(lock_profile([d for d in deps if d != x])), x) for x in deps]
             deps.remove(min(trials)[1])
             lock = lock_profile(deps)
+        for tool in heavy:
+            if resolved(lock) >= args.min_packages:
+                break
+            bigger = lock_profile(deps + [tool])
+            if resolved(bigger) <= args.max_packages:
+                deps, lock = deps + [tool], bigger
+        if resolved(lock) < args.min_packages:
+            print(f"warning: profile {i} only reaches {resolved(lock)} packages")
         npm["profiles"][i] = deps
         locks.append(lock)
         print(f"profile {i:2}: {len(deps):2} direct deps, {resolved(lock)} resolved packages")

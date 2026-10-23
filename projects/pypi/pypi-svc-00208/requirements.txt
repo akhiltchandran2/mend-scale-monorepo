@@ -3,12 +3,12 @@ Django==2.2.0
 Flask==0.12.2
 Jinja2==2.10
 Pillow==6.2.0
-PyJWT==1.7.1
 PyYAML==5.1
 SQLAlchemy==1.2.0
 Twisted==19.10.0
 Werkzeug==0.15.3
 aiohttp==3.7.3
+bleach==3.1.0
 celery==4.4.0
 certifi==2019.11.28
 cryptography==2.3
