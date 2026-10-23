@@ -1,0 +1,28 @@
+{
+  "name": "npm-svc-05475",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "acorn": "5.7.3",
+    "async": "2.6.3",
+    "axios": "0.18.0",
+    "decode-uri-component": "0.2.0",
+    "ejs": "2.7.4",
+    "follow-redirects": "1.13.0",
+    "glob-parent": "3.1.0",
+    "handlebars": "4.0.11",
+    "http-cache-semantics": "4.1.0",
+    "json5": "1.0.1",
+    "jszip": "3.5.0",
+    "lodash": "4.17.4",
+    "minimist": "0.0.8",
+    "mixin-deep": "1.3.1",
+    "protobufjs": "6.10.0",
+    "request": "2.88.0",
+    "shell-quote": "1.7.2",
+    "underscore": "1.12.0",
+    "url-parse": "1.4.3",
+    "xml2js": "0.4.19"
+  }
+}

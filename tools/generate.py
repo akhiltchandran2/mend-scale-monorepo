@@ -92,10 +92,12 @@ def write_maven(path, name, deps):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--npm", type=int, default=1500, help="number of npm projects")
+    ap.add_argument("--npm", type=int, default=5500, help="number of npm projects")
     ap.add_argument("--pypi", type=int, default=300, help="number of Python projects")
     ap.add_argument("--maven", type=int, default=200, help="number of Maven projects")
-    ap.add_argument("--deps", type=int, default=35, help="direct dependencies per project")
+    ap.add_argument("--deps", type=int, default=35, help="direct dependencies per Python/Maven project")
+    ap.add_argument("--npm-deps", type=int, default=20,
+                    help="direct dependencies per npm project (lock.py trims further to fit --max-packages)")
     ap.add_argument("--profiles", type=int, default=12, help="distinct dependency sets per ecosystem")
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--out", type=Path, default=ROOT / "projects")
@@ -113,7 +115,8 @@ def main():
     ]
     index = {"seed": args.seed, "ecosystems": {}}
     for eco, count, catalog, writer in plan:
-        profiles = make_profiles(catalog, args.profiles, args.deps, rng)
+        deps = args.npm_deps if eco == "npm" else args.deps
+        profiles = make_profiles(catalog, args.profiles, deps, rng)
         projects = []
         for i in range(count):
             name = f"{eco}-svc-{i:05d}"
@@ -121,7 +124,7 @@ def main():
             writer(args.out / eco / name, name, profiles[p])
             projects.append({"name": name, "profile": p})
         index["ecosystems"][eco] = {"profiles": profiles, "projects": projects}
-        print(f"{eco:6} {count:6} projects  {len(profiles)} profiles  {args.deps} direct deps each")
+        print(f"{eco:6} {count:6} projects  {len(profiles)} profiles  {deps} direct deps each")
 
     (args.out / "index.json").write_text(json.dumps(index, indent=1) + "\n")
     print(f"wrote {args.out}")

@@ -5,3 +5,4 @@ target/
 *.jar
 sample-report*
 whitesource/
+scan-results.log

@@ -8,7 +8,6 @@ PyYAML==5.1
 SQLAlchemy==1.2.0
 Twisted==19.10.0
 Werkzeug==0.15.3
-aiohttp==3.7.3
 bleach==3.1.0
 celery==4.4.0
 certifi==2019.11.28
@@ -28,6 +27,7 @@ pyOpenSSL==17.5.0
 pycrypto==2.6.1
 requests==2.19.1
 rsa==3.4
+scipy==1.0.0
 setuptools==50.0.0
 tornado==5.1
 ujson==1.35
